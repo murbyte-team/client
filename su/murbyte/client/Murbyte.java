@@ -15,9 +15,20 @@ import org.lwjgl.util.glu.GLU;
 
 public class Murbyte implements Runnable {
     private static final boolean FULLSCREEN_MODE = false;
+
     private int width;
+
     private int height;
+
     private FloatBuffer fogColor = BufferUtils.createFloatBuffer(4);
+
+    private Timer timer = new Timer(60.0F);
+
+    private Level level;
+
+    private LevelRenderer levelRenderer;
+
+    private Player player;
 
     public void init() throws LWJGLException, IOException {
         int col = 920330;
