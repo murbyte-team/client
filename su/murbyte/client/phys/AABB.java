@@ -1,6 +1,6 @@
 package su.murbyte.client.phys;
 
-public class phys {
+public class AABB {
     private float epsilon = 0.0F;
 
     public float x0;
@@ -15,7 +15,7 @@ public class phys {
 
     public float z1;
 
-    public phys(float x0, float y0, float z0, float x1, float y1, float z1) {
+    public AABB(float x0, float y0, float z0, float x1, float y1, float z1) {
         this.x0 = x0;
         this.y0 = y0;
         this.z0 = z0;
@@ -24,7 +24,7 @@ public class phys {
         this.z1 = z1;
     }
 
-    public phys expand(float xa, float ya, float za) {
+    public AABB expand(float xa, float ya, float za) {
         float _x0 = this.x0;
         float _y0 = this.y0;
         float _z0 = this.z0;
@@ -43,20 +43,20 @@ public class phys {
             _z0 += za;
         if (za > 0.0F)
             _z1 += za;
-        return new phys(_x0, _y0, _z0, _x1, _y1, _z1);
+        return new AABB(_x0, _y0, _z0, _x1, _y1, _z1);
     }
 
-    public phys grow(float xa, float ya, float za) {
+    public AABB grow(float xa, float ya, float za) {
         float _x0 = this.x0 - xa;
         float _y0 = this.y0 - ya;
         float _z0 = this.z0 - za;
         float _x1 = this.x1 + xa;
         float _y1 = this.y1 + ya;
         float _z1 = this.z1 + za;
-        return new phys(_x0, _y0, _z0, _x1, _y1, _z1);
+        return new AABB(_x0, _y0, _z0, _x1, _y1, _z1);
     }
 
-    public float clipXCollide(phys c, float xa) {
+    public float clipXCollide(AABB c, float xa) {
         if (c.y1 <= this.y0 || c.y0 >= this.y1)
             return xa;
         if (c.z1 <= this.z0 || c.z0 >= this.z1)
@@ -74,7 +74,7 @@ public class phys {
         return xa;
     }
 
-    public float clipYCollide(phys c, float ya) {
+    public float clipYCollide(AABB c, float ya) {
         if (c.x1 <= this.x0 || c.x0 >= this.x1)
             return ya;
         if (c.z1 <= this.z0 || c.z0 >= this.z1)
@@ -92,7 +92,7 @@ public class phys {
         return ya;
     }
 
-    public float clipZCollide(phys c, float za) {
+    public float clipZCollide(AABB c, float za) {
         if (c.x1 <= this.x0 || c.x0 >= this.x1)
             return za;
         if (c.y1 <= this.y0 || c.y0 >= this.y1)
@@ -110,7 +110,7 @@ public class phys {
         return za;
     }
 
-    public boolean intersects(phys c) {
+    public boolean intersects(AABB c) {
         if (c.x1 <= this.x0 || c.x0 >= this.x1)
             return false;
         if (c.y1 <= this.y0 || c.y0 >= this.y1)

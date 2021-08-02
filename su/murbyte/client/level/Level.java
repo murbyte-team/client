@@ -1,5 +1,6 @@
 package su.murbyte.client.level;
 
+import su.murbyte.client.phys.AABB;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -8,7 +9,6 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import su.murbyte.client.phys.phys;
 
 public class Level {
     public final int width;
@@ -104,8 +104,8 @@ public class Level {
         return isSolidTile(x, y, z);
     }
 
-    public ArrayList<phys> getCubes(phys aABB) {
-        ArrayList<phys> aABBs = new ArrayList<phys>();
+    public ArrayList<AABB> getCubes(AABB aABB) {
+        ArrayList<AABB> aABBs = new ArrayList<AABB>();
         int x0 = (int)aABB.x0;
         int x1 = (int)(aABB.x1 + 1.0F);
         int y0 = (int)aABB.y0;
@@ -128,7 +128,7 @@ public class Level {
             for (int y = y0; y < y1; y++) {
                 for (int z = z0; z < z1; z++) {
                     if (isSolidTile(x, y, z))
-                        aABBs.add(new phys(x, y, z, (x + 1), (y + 1), (z + 1)));
+                        aABBs.add(new AABB(x, y, z, (x + 1), (y + 1), (z + 1)));
                 }
             }
         }

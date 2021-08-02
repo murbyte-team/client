@@ -1,7 +1,7 @@
 package su.murbyte.client;
 
 import su.murbyte.client.level.Level;
-import su.murbyte.client.phys.phys;
+import su.murbyte.client.phys.AABB;
 import java.util.List;
 import org.lwjgl.input.Keyboard;
 
@@ -30,30 +30,31 @@ public class Player {
 
     public float xRot;
 
-    public phys physs;
+    public AABB bb;
 
     public boolean onGround = false;
 
     public Player(Level level) {
         this.level = level;
-        resetPosition(); //TODO сделать левел =)
+        resetPos();
     }
 
-    private void resetPosition() {
+    private void resetPos() {
         float x = (float)Math.random() * this.level.width;
         float y = (this.level.depth + 10);
         float z = (float)Math.random() * this.level.height;
-        setPosition(x, y, z);
+        setPos(x, y, z);
     }
 
-    private void setPosition(float x, float y, float z) {
+    private void setPos(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
         float w = 0.3F;
         float h = 0.9F;
-        this.physs = new phys(x - w, y - h, z - w, x + w, y + h, z + w);
+        this.bb = new AABB(x - w, y - h, z - w, x + w, y + h, z + w);
     }
+
     public void turn(float xo, float yo) {
         this.yRot = (float)(this.yRot + xo * 0.15D);
         this.xRot = (float)(this.xRot - yo * 0.15D);
@@ -70,7 +71,7 @@ public class Player {
         float xa = 0.0F;
         float ya = 0.0F;
         if (Keyboard.isKeyDown(19))
-            resetPosition();
+            resetPos();
         if (Keyboard.isKeyDown(200) || Keyboard.isKeyDown(17))
             ya--;
         if (Keyboard.isKeyDown(208) || Keyboard.isKeyDown(31))
@@ -98,17 +99,17 @@ public class Player {
         float xaOrg = xa;
         float yaOrg = ya;
         float zaOrg = za;
-        List<phys> aABBs = this.level.getCubes(this.physs.expand(xa, ya, za)); //TODO допилить эта чиста в левель
+        List<AABB> aABBs = this.level.getCubes(this.bb.expand(xa, ya, za));
         int i;
         for (i = 0; i < aABBs.size(); i++)
-            ya = ((phys)aABBs.get(i)).clipYCollide(this.physs, ya);
-        this.physs.move(0.0F, ya, 0.0F);
+            ya = ((AABB)aABBs.get(i)).clipYCollide(this.bb, ya);
+        this.bb.move(0.0F, ya, 0.0F);
         for (i = 0; i < aABBs.size(); i++)
-            xa = ((phys)aABBs.get(i)).clipXCollide(this.physs, xa);
-        this.physs.move(xa, 0.0F, 0.0F);
+            xa = ((AABB)aABBs.get(i)).clipXCollide(this.bb, xa);
+        this.bb.move(xa, 0.0F, 0.0F);
         for (i = 0; i < aABBs.size(); i++)
-            za = ((phys)aABBs.get(i)).clipZCollide(this.physs, za);
-        this.physs.move(0.0F, 0.0F, za);
+            za = ((AABB)aABBs.get(i)).clipZCollide(this.bb, za);
+        this.bb.move(0.0F, 0.0F, za);
         this.onGround = (yaOrg != ya && yaOrg < 0.0F);
         if (xaOrg != xa)
             this.xd = 0.0F;
@@ -116,9 +117,9 @@ public class Player {
             this.yd = 0.0F;
         if (zaOrg != za)
             this.zd = 0.0F;
-        this.x = (this.physs.x0 + this.physs.x1) / 2.0F;
-        this.y = this.physs.y0 + 1.62F;
-        this.z = (this.physs.z0 + this.physs.z1) / 2.0F;
+        this.x = (this.bb.x0 + this.bb.x1) / 2.0F;
+        this.y = this.bb.y0 + 1.62F;
+        this.z = (this.bb.z0 + this.bb.z1) / 2.0F;
     }
 
     public void moveRelative(float xa, float za, float speed) {
